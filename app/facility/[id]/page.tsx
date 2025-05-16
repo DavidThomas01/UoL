@@ -146,7 +146,7 @@ export default function FacilityDetailPage() {
 
   return (
     <main className="container py-8">
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2 max-w-[1200px] mx-auto">
         <div className="space-y-6">
           <div className="relative h-[400px] overflow-hidden rounded-lg">
             <Image
@@ -181,7 +181,7 @@ export default function FacilityDetailPage() {
           </div>
         </div>
 
-        <div className="space-y-6 lg:sticky lg:top-8">
+        <div className="space-y-6">
           <div className="rounded-lg border p-6">
             <h2 className="flex items-center gap-2 text-lg font-semibold">
               <CalendarIcon className="h-5 w-5" />
