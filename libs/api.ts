@@ -88,6 +88,7 @@ export const bookTimeSlot = async (facilityId: string, slotId: string): Promise<
         startTime: new Date(),
         endTime: new Date(),
         isAvailable: false,
+        isBooked: true
       },
       status: 'confirmed',
       createdAt: new Date(),

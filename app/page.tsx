@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { FacilityCard } from "@/components/FacilityCard";
 import { useFacilities } from "@/hooks/useFacilities";
+import { FacilityCardSkeleton } from "@/components/SkeletonLoader";
 
 export default function HomePage() {
   const { facilities, loading, error } = useFacilities();
@@ -35,7 +36,7 @@ export default function HomePage() {
       {loading ? (
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-[400px] animate-pulse rounded-lg bg-muted" />
+            <FacilityCardSkeleton key={i} />
           ))}
         </div>
       ) : error ? (
