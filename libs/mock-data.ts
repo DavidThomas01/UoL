@@ -9,6 +9,10 @@ export const facilities: Facility[] = [
     capacity: 20,
     location: "Main Building, Floor 1",
     amenities: ["4K Projector", "Surround Sound", "Comfortable Seating", "Blackout Curtains"],
+    restrictedHours: {
+      start: "01:00",
+      end: "04:00"
+    }
   },
   {
     id: "conferenceRoom3A",
@@ -18,6 +22,10 @@ export const facilities: Facility[] = [
     capacity: 12,
     location: "Main Building, Floor 1",
     amenities: ["Video Conferencing", "Whiteboard", "TV Display", "Coffee Machine"],
+    restrictedHours: {
+      start: "22:00",
+      end: "06:00"
+    }
   },
   {
     id: "tennisCourt1",
@@ -27,6 +35,10 @@ export const facilities: Facility[] = [
     capacity: 12,
     location: "Cartwright Gardens",
     amenities: ["Tennis Court", "Comfortable Seating"],
+    restrictedHours: {
+      start: "20:00",
+      end: "08:00"
+    }
   },
 ];
 
@@ -53,6 +65,10 @@ export function createFacility(
     capacity,
     location,
     amenities,
+    restrictedHours: {
+      start: "22:00",
+      end: "06:00"
+    }
   };
 }
 

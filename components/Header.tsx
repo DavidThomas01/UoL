@@ -12,8 +12,11 @@ export function Header() {
 
   return (
     <header className="border-b">
-      <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="text-xl font-bold">
+      <div className="container flex h-14 items-center justify-between">
+        <Link 
+          href="/" 
+          className="text-lg md:text-xl font-bold tracking-tight"
+        >
           BookMyHall
         </Link>
 
@@ -48,12 +51,12 @@ export function Header() {
         </nav>
 
         {/* Mobile Profile Button */}
-        <div className="md:hidden flex items-center gap-2">
-          <span className="text-sm text-muted-foreground flex items-center gap-1">
+        <div className="md:hidden flex items-center gap-3">
+          <span className="text-sm text-muted-foreground flex items-center gap-1.5">
             <User className="h-4 w-4" />
             {currentUser.name}
           </span>
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="h-8 w-8">
             <LogOut className="h-4 w-4" />
           </Button>
         </div>

@@ -1,30 +1,66 @@
 import { TimeSlot, Booking } from "./types";
-import { currentUser } from "./mock-data";
+import { currentUser, facilities } from "./mock-data";
+import { parse, isWithinInterval, set } from 'date-fns';
 
 // Simulate API delay
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Check if a time is within restricted hours
+const isWithinRestrictedHours = (facility: typeof facilities[0], time: Date) => {
+  // Create restricted time points for comparison using the same date as the input time
+  const restrictedStart = set(new Date(time), {
+    hours: parseInt(facility.restrictedHours.start.split(':')[0]),
+    minutes: parseInt(facility.restrictedHours.start.split(':')[1]),
+    seconds: 0,
+    milliseconds: 0
+  });
+
+  const restrictedEnd = set(new Date(time), {
+    hours: parseInt(facility.restrictedHours.end.split(':')[0]),
+    minutes: parseInt(facility.restrictedHours.end.split(':')[1]),
+    seconds: 0,
+    milliseconds: 0
+  });
+
+  // If restricted period crosses midnight (start time is later than end time)
+  if (restrictedStart.getTime() > restrictedEnd.getTime()) {
+    // Check if time is NOT between end and start (meaning it IS restricted)
+    return !(time >= restrictedEnd && time < restrictedStart);
+  }
+  
+  // Normal case - check if time is between start and end
+  return time >= restrictedStart && time < restrictedEnd;
+};
 
 // Generate time slots for a given date
 export const generateTimeSlots = async (facilityId: string, date: Date): Promise<TimeSlot[]> => {
   await delay(500); // Simulate API call
 
+  const facility = facilities.find(f => f.id === facilityId);
+  if (!facility) throw new Error('Facility not found');
+
   const slots: TimeSlot[] = [];
-  const startHour = 9; // 9 AM
-  const endHour = 17; // 5 PM
-  
-  for (let hour = startHour; hour < endHour; hour++) {
+  // Generate slots for full 24 hours
+  for (let hour = 0; hour < 24; hour++) {
     const startTime = new Date(date);
     startTime.setHours(hour, 0, 0, 0);
     
     const endTime = new Date(date);
     endTime.setHours(hour + 1, 0, 0, 0);
     
+    // Check if this time slot is within restricted hours
+    const isRestricted = isWithinRestrictedHours(facility, startTime);
+    
+    // Generate random availability only if not restricted
+    const isRandomlyAvailable = Math.random() > 0.3; // 70% chance of being available
+    
     slots.push({
       id: `${facilityId}-${startTime.toISOString()}`,
       facilityId,
       startTime,
       endTime,
-      isAvailable: Math.random() > 0.3, // 70% chance of being available
+      isAvailable: !isRestricted, // If restricted, never available. If not restricted, use random availability
+      isBooked: !isRestricted && !isRandomlyAvailable // Only mark as booked if not restricted and not randomly available
     });
   }
   

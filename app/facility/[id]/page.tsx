@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { format, addDays, isSameDay, isAfter, isBefore, startOfToday } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
+import { DatePicker } from '@/components/DatePicker';
 import { Button } from '@/components/ui/button';
 import { TimeSlot } from '@/components/TimeSlot';
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -32,6 +33,16 @@ export default function FacilityDetailPage() {
 
   // Calculate the maximum allowed date (5 days from today)
   const maxDate = useMemo(() => addDays(startOfToday(), 5), []);
+
+  // Calculate available dates (next 5 days)
+  const availableDates = useMemo(() => {
+    const dates = [];
+    const today = startOfToday();
+    for (let i = 0; i < 5; i++) {
+      dates.push(addDays(today, i));
+    }
+    return dates;
+  }, []);
 
   if (!facility) {
     return (
@@ -176,16 +187,49 @@ export default function FacilityDetailPage() {
               <CalendarIcon className="h-5 w-5" />
               Select Date & Time
             </h2>
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={(newDate) => newDate && handleDateSelect(newDate)}
-              className="mt-4"
-              disabled={(date) => {
-                const today = startOfToday();
-                return isBefore(date, today) || isAfter(date, maxDate);
-              }}
-            />
+            
+            {/* Mobile Date Picker */}
+            <div className="md:hidden mt-4">
+              <DatePicker
+                dates={availableDates}
+                selectedDate={date}
+                onSelect={handleDateSelect}
+              />
+            </div>
+            
+            {/* Desktop Calendar */}
+            <div className="hidden md:block">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={(newDate) => newDate && handleDateSelect(newDate)}
+                className="mt-4 p-3 bg-white rounded-lg"
+                disabled={(date) => {
+                  const today = startOfToday();
+                  return isBefore(date, today) || isAfter(date, maxDate);
+                }}
+                modifiers={{
+                  today: new Date(),
+                  available: {
+                    from: startOfToday(),
+                    to: maxDate,
+                  },
+                }}
+                modifiersStyles={{
+                  today: {
+                    fontWeight: 'bold'
+                  },
+                  available: {
+                    backgroundColor: 'var(--success-50)',
+                    color: 'var(--success-900)',
+                  },
+                  disabled: {
+                    backgroundColor: 'var(--destructive-50)',
+                    color: 'var(--destructive-900)',
+                  },
+                }}
+              />
+            </div>
             <div className="mt-6 space-y-2">
               {isLoading ? (
                 <div className="space-y-2">

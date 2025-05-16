@@ -6,6 +6,10 @@ export interface Facility {
   capacity: number;
   location: string;
   amenities: string[];
+  restrictedHours: {
+    start: string;
+    end: string;
+  };
 }
 
 export interface TimeSlot {
@@ -14,6 +18,7 @@ export interface TimeSlot {
   startTime: Date;
   endTime: Date;
   isAvailable: boolean;
+  isBooked: boolean;
 }
 
 export interface Booking {
